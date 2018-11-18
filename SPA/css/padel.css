@@ -1,0 +1,63 @@
+#upmlogo{height:45px;display:inline;margin-top: -13px;opacity:0.9}
+#upmlogo_cartel{opacity:0.7}
+#cuerpo{background: url('../imgs/red.jpg') no-repeat ; background-size: cover;
+        color:white; 
+        border:1px solid white; 
+        border-radius: 10px;
+            -webkit-border-radius:10px;
+            -moz-border-radius:10px;
+            -ms-border-radius:10px;        
+        }
+.upmlogo-home-imgbg { opacity: 0.7; margin-top: 15px;}
+.form-heading { color:#fff; font-size:23px;}
+.panel h2{ color:#444444; font-size:18px; margin:0 0 8px 0;}
+.panel p { color:#777777; font-size:14px; margin-bottom:30px; line-height:24px;}
+.page .form-control {
+  background: #f7f7f7 none repeat scroll 0 0;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 50px;
+  line-height: 50px;
+}
+.main-div-login {
+  background: #ffffff none repeat scroll 0 0;
+  border-radius: 2px;
+  margin: 10px auto 30px;
+  max-width: 38%;
+  padding: 50px 70px 70px 71px;
+}
+.main-div-registry {
+  background: #ffffff none repeat scroll 0 0;
+  border-radius: 2px;
+  margin: 10px auto 30px;
+  max-width: 65%;
+  padding: 50px 60px 60px 71px;
+}
+.main-div-facilities {
+  background: #ffffff none repeat scroll 0 0;
+  border-radius: 2px;
+  margin: 10px auto 30px;
+  max-width: 80%;
+  padding: 50px 60px 60px 71px;
+}
+.page .form-group {
+  margin-bottom:10px;
+}
+.page { text-align:center;}
+.page  .btn.btn-primary {
+  background: #54ce66 none repeat scroll 0 0;
+  border-color: #54ce66;
+  color: #ffffff;
+  font-size: 14px;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  padding: 0;
+}
+.page .btn.btn-primary.reset {
+  background: #54ce66 none repeat scroll 0 0;
+}
+.page .control-label { color:#777777; font-size:14px; }
+.page .control-label{ text-align:left; }
+
