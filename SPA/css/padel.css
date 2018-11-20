@@ -42,6 +42,13 @@
   max-width: 80%;
   padding: 50px 60px 60px 71px;
 }
+.main-div-services {
+  background: #ffffff none repeat scroll 0 0;
+  border-radius: 2px;
+  margin: 10px auto 30px;
+  max-width: 60%;
+  padding: 50px 60px 60px 71px;
+}
 .main-div-home {
   background: #ffffff none repeat scroll 0 0;
   border-radius: 4px;
