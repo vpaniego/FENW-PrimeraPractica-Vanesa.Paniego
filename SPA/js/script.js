@@ -1,7 +1,14 @@
 $(document).ready(function () {
 
+    $('#alertaErrorLogin').hide();
+    $('#successLogin').hide();
+    $('#idReservar').hide();
+
     $('#idLogin').click(function () {
         $('.content').load('login.html');
+        $('#alertaErrorLogin').hide();
+        $('#successLogin').hide();
+        $('#idReservar').hide();
     });
 
     $('#idRegistro').click(function () {
@@ -9,7 +16,11 @@ $(document).ready(function () {
     });
 
     $('#idReservar').click(function () {
-        $('.content').load('reservar.html');
+        let usuarioLogado = sessionStorage.getItem("datalogin");
+        alert(usuarioLogado);
+        if(usuarioLogado){
+            $('.content').load('reservar.html');
+        }
     });
 
     $('#idInstalaciones').click(function () {
@@ -26,7 +37,6 @@ $(document).ready(function () {
         var username = $('#inputUsername').val();
         var password = $('#inputPassword').val();
         url = url + "?username=" + username + "&password=" + password;
-        console.log("Prueba url correcta : " + url);
 
         $.ajax({
             url: url,
@@ -35,10 +45,17 @@ $(document).ready(function () {
             dataType: "json"
         })
             .done(function (data) {
-                console.log("Usuario logado");
+                console.log("Usuario logado correctamente");
+                sessionStorage.setItem("datalogin", data);
+                $('#alertaErrorLogin').hide();
+                $('#successLogin').show();
+                $('#idReservar').show();
+
             })
             .fail(function (data) {
                 console.log("Usuario no logado");
+                $('#alertaErrorLogin').show();
+                $('#successLogin').hide();
             });
     });
 
