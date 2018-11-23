@@ -1,14 +1,38 @@
-$(document).ready(function () {
-
+function hideComponentsNavBarAlert() {
     $('#alertaErrorLogin').hide();
     $('#successLogin').hide();
     $('#idReservar').hide();
+    $('#idLogout').hide();
+}
+
+function doneLoginHideShowNavBarAlert() {
+    $('#alertaErrorLogin').hide();
+    $('#idLogin').hide();
+    $('#successLogin').show();
+    $('#idReservar').show();
+    $('#idLogout').show();
+}
+
+function logoutHideShowNavBarAlert() {
+    $('#idLogin').show();
+    $('#idLogout').hide();
+    $('#idReservar').hide();
+}
+
+function failHideShowAlerts(){
+    $('#alertaErrorLogin').show();
+    $('#successLogin').hide();
+}
+
+$(document).ready(function () {
+
+    hideComponentsNavBarAlert();
 
     $('#idLogin').click(function () {
         $('.content').load('login.html');
-        $('#alertaErrorLogin').hide();
-        $('#successLogin').hide();
-        $('#idReservar').hide();
+
+        hideComponentsNavBarAlert();
+
     });
 
     $('#idRegistro').click(function () {
@@ -17,8 +41,7 @@ $(document).ready(function () {
 
     $('#idReservar').click(function () {
         let usuarioLogado = sessionStorage.getItem("datalogin");
-        alert(usuarioLogado);
-        if(usuarioLogado){
+        if (usuarioLogado) {
             $('.content').load('reservar.html');
         }
     });
@@ -29,6 +52,11 @@ $(document).ready(function () {
 
     $('#idServicios').click(function () {
         $('.content').load('servicios.html');
+    });
+
+    $('#idLogout').click(function () {
+        sessionStorage.removeItem("datalogin");
+        logoutHideShowNavBarAlert();
     });
 
     $('#loginForm').submit(function (event) {
@@ -44,20 +72,30 @@ $(document).ready(function () {
             async: true,
             dataType: "json"
         })
-            .done(function (data) {
+            .done(function (data, textStatus, xhr) {
                 console.log("Usuario logado correctamente");
-                sessionStorage.setItem("datalogin", data);
-                $('#alertaErrorLogin').hide();
-                $('#successLogin').show();
-                $('#idReservar').show();
-
+                var auth = xhr.getResponseHeader('Authorization');
+                sessionStorage.setItem("datalogin", auth);
+                doneLoginHideShowNavBarAlert();
             })
             .fail(function (data) {
                 console.log("Usuario no logado");
-                $('#alertaErrorLogin').show();
-                $('#successLogin').hide();
+                failHideShowAlerts();
             });
     });
 
+    $('#registryForm').submit(function (event) {
+        // Comprobacion para evitar Spam en el envio del formulario de registro
+        var controlSpam = $('#nospam').val();
+        if (controlSpam) {
+            console.log("El campo de control de spam está vacío. Se realiza el envío del formulario de registro de usuario");
+
+            //TODO: POST /users
+
+        } else {
+            console.log("El campo de control de spam no está vacío. Es un spam bot!!!");
+        }
+    });
 
 });
+

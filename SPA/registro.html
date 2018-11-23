@@ -13,32 +13,37 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-2" for="email">Email:</label>
+                <label class="control-label col-sm-2" for="inputEmail">Email:</label>
                 <div class="col-sm-10">
                     <input type="email" class="form-control" id="inputEmail" placeholder="Email" required="true">
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-2" for="email">Password:</label>
+                <label class="control-label col-sm-2" for="inputPassword">Password:</label>
                 <div class="col-sm-10">
                     <input type="password" class="form-control" id="inputPassword" placeholder="Password"
                            required="true">
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-2" for="email">Repite Password:</label>
+                <label class="control-label col-sm-2" for="inputRepeatPassword">Repite Password:</label>
                 <div class="col-sm-10">
                     <input type="password" class="form-control" id="inputRepeatPassword" placeholder="Repite Password"
                            required="true">
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-2" for="email">Fecha de Nacimiento:</label>
+                <label class="control-label col-sm-2" for="inputFechaNacimiento">Fecha de Nacimiento:</label>
                 <div class="col-sm-10">
                     <input type="date" class="form-control" id="inputFechaNacimiento" placeholder="dd/mm/aaaa">
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Enviar</button>
+
+            <!-- Honeypot: Evitar bots-->
+            <label for="nospam" class="escondido">¡Si ves esto, no llenes el siguiente campo!</label>
+            <input id="nospam" name="nospam" class="escondido" />
+
         </form>
     </div>
 </div>
