@@ -1,38 +1,48 @@
-function hideComponentsNavBarAlert() {
-    $('#alertaErrorLogin').hide();
-    $('#successLogin').hide();
-    $('#idReservar').hide();
-    $('#idLogout').hide();
-}
+$(function () {
 
-function doneLoginHideShowNavBarAlert() {
-    $('#alertaErrorLogin').hide();
-    $('#idLogin').hide();
-    $('#successLogin').show();
-    $('#idReservar').show();
-    $('#idLogout').show();
-}
-
-function logoutHideShowNavBarAlert() {
-    $('#idLogin').show();
-    $('#idLogout').hide();
-    $('#idReservar').hide();
-}
-
-function failHideShowAlerts(){
-    $('#alertaErrorLogin').show();
-    $('#successLogin').hide();
-}
-
-$(document).ready(function () {
-
-    hideComponentsNavBarAlert();
+    hideComponentsNavBar();
 
     $('#idLogin').click(function () {
-        $('.content').load('login.html');
+        $('.content').load('login.html', function (responseTxt, statusTxt, xhr) {
+            if (statusTxt == "success") {
 
-        hideComponentsNavBarAlert();
+                hideComponentsAlert();
 
+                $('#loginForm').submit(function (event) {
+                    event.preventDefault();
+                    var url = "http://fenw.etsisi.upm.es:5555/users/login";
+                    var username = $('#inputUsername').val();
+                    var password = $('#inputPassword').val();
+                    url = url + "?username=" + username + "&password=" + password;
+
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        async: true,
+                        dataType: "json"
+                    })
+                        .done(function (response, textStatus, xhr) {
+                            console.log("Usuario logado correctamente");
+
+                            var auth = xhr.getResponseHeader('Authorization');
+
+                            sessionStorage.setItem("datalogin", auth);
+
+                            alertSuccessLogin();
+                        })
+                        .fail(function (error) {
+                            console.log("Usuario no logado");
+
+                            alertErrorLogin();
+                        });
+                });
+            }
+            if (statusTxt == "error") {
+                alert("Error: " + xhr.status + ": " + xhr.statusText);
+            }
+
+
+        });
     });
 
     $('#idRegistro').click(function () {
@@ -54,48 +64,41 @@ $(document).ready(function () {
         $('.content').load('servicios.html');
     });
 
-    $('#idLogout').click(function () {
-        sessionStorage.removeItem("datalogin");
-        logoutHideShowNavBarAlert();
-    });
-
-    $('#loginForm').submit(function (event) {
-        event.preventDefault();
-        var url = "http://fenw.etsisi.upm.es:5555/users/login";
-        var username = $('#inputUsername').val();
-        var password = $('#inputPassword').val();
-        url = url + "?username=" + username + "&password=" + password;
-
-        $.ajax({
-            url: url,
-            type: "GET",
-            async: true,
-            dataType: "json"
-        })
-            .done(function (data, textStatus, xhr) {
-                console.log("Usuario logado correctamente");
-                var auth = xhr.getResponseHeader('Authorization');
-                sessionStorage.setItem("datalogin", auth);
-                doneLoginHideShowNavBarAlert();
-            })
-            .fail(function (data) {
-                console.log("Usuario no logado");
-                failHideShowAlerts();
-            });
-    });
-
-    $('#registryForm').submit(function (event) {
-        // Comprobacion para evitar Spam en el envio del formulario de registro
-        var controlSpam = $('#nospam').val();
-        if (controlSpam) {
-            console.log("El campo de control de spam está vacío. Se realiza el envío del formulario de registro de usuario");
-
-            //TODO: POST /users
-
-        } else {
-            console.log("El campo de control de spam no está vacío. Es un spam bot!!!");
-        }
-    });
+    $('#idLogout').click(logout);
 
 });
+
+function hideComponentsNavBar() {
+    $('#idReservar').hide();
+    $('#idLogout').hide();
+}
+
+function hideComponentsAlert() {
+    $('#alertaErrorLogin').hide();
+    $('#successLogin').hide();
+}
+
+function toggleComponentsNavBar() {
+    $('#idReservar').toggle();
+    $('#idLogout').toggle();
+    $('#idLogin').toggle();
+}
+
+function alertSuccessLogin() {
+    $('#alertaErrorLogin').hide();
+    $('#successLogin').show();
+    toggleComponentsNavBar();
+}
+
+function alertErrorLogin() {
+    $('#alertaErrorLogin').show();
+    $('#successLogin').hide();
+}
+
+function logout() {
+    sessionStorage.removeItem("datalogin");
+
+    toggleComponentsNavBar();
+    hideComponentsAlert()
+}
 
