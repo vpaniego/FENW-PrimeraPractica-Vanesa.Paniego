@@ -44,7 +44,7 @@ function toggleComponentsNavBar() {
 }
 
 function successLogin(username) {
-    console.log("Usuario" + username + " logado correctamente");
+    console.log("Usuario " + username + " logado correctamente");
     $('a[class=dropdown-toggle]').text(username).append($('<span></span>').addClass("caret"));
     hideLoginAlert();
     loadHome();
@@ -86,10 +86,21 @@ function loadReservar() {
     }
 }
 
+function loadComponent(url) {
+    $('.content').load(url);
+    //history.pushState(null, '', locationSPA + url);
+}
+
 function loadRegistro() {
     $('.content').load('registro.html', function (responseTxt, statusTxt, xhr) {
         if (statusTxt == "success") {
+
+            //$('#datepickerFechaNacimiento').datetimepicker();
+
             $('#registryForm').submit(function (event) {
+                alert('Fecha nacimiento');
+
+
                 // Comprobacion para evitar Spam en el envio del formulario de registro
                 var controlSpam = $('#nospam').val();
                 if (controlSpam) {
@@ -108,6 +119,11 @@ function loadRegistro() {
     });
 
 
+}
+
+function logout() {
+    deleteToken(tokenKey);
+    redirectToIndex();
 }
 
 function loadLogin() {
@@ -149,22 +165,12 @@ function treatToken(response, xhr) {
     let auth = xhr.getResponseHeader('Authorization');
     if (auth === response) {
         saveToken(tokenKey, auth);
-        console.log('Token verificado');
+        console.log('Integridad token verificada');
     } else {
-        console.log('Token no verificado');
+        console.log('Integridad token no verificada');
         verificado = false;
     }
     return verificado;
-}
-
-function loadComponent(url) {
-    $('.content').load(url);
-    history.pushState(null, '', locationSPA + url);
-}
-
-function logout() {
-    deleteToken(tokenKey);
-    redirectToIndex();
 }
 
 function saveToken(key, value) {
@@ -178,4 +184,9 @@ function deleteToken(key) {
 function getToken(key) {
     return sessionStorage.getItem(key);
 }
+
+
+
+
+
 
