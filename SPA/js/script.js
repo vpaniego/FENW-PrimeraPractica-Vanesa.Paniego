@@ -44,13 +44,13 @@ function toggleComponentsNavBar() {
 }
 
 function successLogin(username) {
-    console.log("Usuario" + username +" logado correctamente");
+    console.log("Usuario" + username + " logado correctamente");
     $('a[class=dropdown-toggle]').text(username).append($('<span></span>').addClass("caret"));
     hideLoginAlert();
     loadHome();
 }
 
-function errorLoginUsuario() {
+function errorLoginUser() {
     console.log("Usuario no logado");
     showLoginAlertUsuario();
     toggleComponentsNavBar();
@@ -127,14 +127,14 @@ function loadLogin() {
                     dataType: ajaxDataType
                 })
                     .done(function (response, textStatus, xhr) {
-                        if (tratarToken(response, xhr)) {
+                        if (treatToken(response, xhr)) {
                             successLogin(username);
                         } else {
                             errorLoginAuthentication();
                         }
                     })
                     .fail(function (error) {
-                        errorLoginUsuario();
+                        errorLoginUser();
                     });
             });
         }
@@ -144,7 +144,7 @@ function loadLogin() {
     });
 }
 
-function tratarToken(response, xhr) {
+function treatToken(response, xhr) {
     let verificado = true;
     let auth = xhr.getResponseHeader('Authorization');
     if (auth === response) {
