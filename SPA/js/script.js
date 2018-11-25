@@ -1,9 +1,14 @@
-var urlApi = "http://fenw.etsisi.upm.es:5555";
-var ajaxAsync = true;
-var ajaxDataType = "json";
+const urlApi = "http://fenw.etsisi.upm.es:5555";
+const ajaxAsync = true;
+const ajaxDataType = "json";
+
+const locationSPA = '/SPA/';
+
+const tokenKey = "authToken";
 
 $(function () {
     hideComponentsNavBar();
+    loadHome();
     $('#idLogin').click(loadLogin);
     $('#idRegistro').click(loadRegistro);
     $('#idReservar').click(loadReservar);
@@ -14,33 +19,56 @@ $(function () {
 
 function hideComponentsNavBar() {
     $('#idReservar').hide();
-    $('#idLogout').hide();
+    $('#idMenuLogout').hide();
 }
 
-function hideComponentsAlert() {
+function hideLoginAlert() {
     $('#alertaErrorLogin').hide();
-    $('#successLogin').hide();
+    $('#alertaErrorVerificacionLogin').hide();
+}
+
+function showLoginAlertUsuario() {
+    $('#alertaErrorLogin').show();
+}
+
+function showLoginAlertAuthentication() {
+    $('#alertaErrorVerificacionLogin').show();
 }
 
 function toggleComponentsNavBar() {
-    $('#idReservar').toggle();
-    $('#idLogout').toggle();
-    $('#idLogin').toggle();
+    if (getToken(tokenKey)) {
+        $('#idReservar').toggle();
+        $('#idMenuLogout').toggle();
+        $('#idLogin').toggle();
+    }
 }
 
-function alertSuccessLogin() {
-    $('#alertaErrorLogin').hide();
-    $('#successLogin').show();
+function successLogin(username) {
+    console.log("Usuario" + username +" logado correctamente");
+    $('a[class=dropdown-toggle]').text(username).append($('<span></span>').addClass("caret"));
+    hideLoginAlert();
+    loadHome();
+}
+
+function errorLoginUsuario() {
+    console.log("Usuario no logado");
+    showLoginAlertUsuario();
     toggleComponentsNavBar();
 }
 
-function alertErrorLogin() {
-    $('#alertaErrorLogin').show();
-    $('#successLogin').hide();
+function errorLoginAuthentication() {
+    console.log("Authentication login no verificada");
+    showLoginAlertAuthentication();
+    toggleComponentsNavBar();
 }
 
-function loadInicio() {
+function redirectToIndex() {
     $(location).attr('href', 'index.html');
+}
+
+function loadHome() {
+    loadComponent('home.html');
+    toggleComponentsNavBar();
 }
 
 function loadServicios() {
@@ -52,7 +80,7 @@ function loadInstalaciones() {
 }
 
 function loadReservar() {
-    let myToken = getToken("datalogin");
+    let myToken = getToken(tokenKey);
     if (myToken) {
         loadComponent('reservar.html');
     }
@@ -78,32 +106,35 @@ function loadRegistro() {
             alert("Error: " + xhr.status + ": " + xhr.statusText);
         }
     });
+
+
 }
 
 function loadLogin() {
     $('.content').load('login.html', function (responseTxt, statusTxt, xhr) {
         if (statusTxt == "success") {
-            hideComponentsAlert();
+            hideLoginAlert();
             $('#loginForm').submit(function (event) {
                 event.preventDefault();
                 var operacion = "/users/login";
                 var username = $('#inputUsername').val();
                 var password = $('#inputPassword').val();
-                urlApi = urlApi + operacion + "?username=" + username + "&password=" + password;
+                var urlLogin = urlApi + operacion + "?username=" + username + "&password=" + password;
                 $.ajax({
-                    url: urlApi,
+                    url: urlLogin,
                     type: "GET",
                     async: ajaxAsync,
                     dataType: ajaxDataType
                 })
                     .done(function (response, textStatus, xhr) {
-                        console.log("Usuario logado correctamente");
-                        tratarToken(response, xhr);
-                        alertSuccessLogin();
+                        if (tratarToken(response, xhr)) {
+                            successLogin(username);
+                        } else {
+                            errorLoginAuthentication();
+                        }
                     })
                     .fail(function (error) {
-                        console.log("Usuario no logado");
-                        alertErrorLogin();
+                        errorLoginUsuario();
                     });
             });
         }
@@ -114,24 +145,26 @@ function loadLogin() {
 }
 
 function tratarToken(response, xhr) {
+    let verificado = true;
     let auth = xhr.getResponseHeader('Authorization');
     if (auth === response) {
-        saveToken("datalogin", auth);
+        saveToken(tokenKey, auth);
         console.log('Token verificado');
     } else {
-        console.log('Token no verificado')
+        console.log('Token no verificado');
+        verificado = false;
     }
+    return verificado;
 }
 
 function loadComponent(url) {
     $('.content').load(url);
+    history.pushState(null, '', locationSPA + url);
 }
 
 function logout() {
-    deleteToken("datalogin");
-    toggleComponentsNavBar();
-    hideComponentsAlert();
-    loadInicio();
+    deleteToken(tokenKey);
+    redirectToIndex();
 }
 
 function saveToken(key, value) {
