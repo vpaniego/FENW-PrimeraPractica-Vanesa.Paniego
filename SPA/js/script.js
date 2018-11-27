@@ -92,15 +92,12 @@ function loadComponent(url) {
 }
 
 function loadRegistro() {
-    $('.content').load('registro.html', function (responseTxt, statusTxt, xhr) {
+    let doRegistro = function (responseTxt, statusTxt, xhr) {
         if (statusTxt == "success") {
 
             //$('#datepickerFechaNacimiento').datetimepicker();
 
-            $('#registryForm').submit(function (event) {
-                alert('Fecha nacimiento');
-
-
+            let registro = function (event) {
                 // Comprobacion para evitar Spam en el envio del formulario de registro
                 var controlSpam = $('#nospam').val();
                 if (controlSpam) {
@@ -111,14 +108,15 @@ function loadRegistro() {
                 } else {
                     console.log("El campo de control de spam no está vacío. Es un spam bot!!!");
                 }
-            });
+            };
+
+            $('#registryForm').submit(registro);
         }
         if (statusTxt == "error") {
             alert("Error: " + xhr.status + ": " + xhr.statusText);
         }
-    });
-
-
+    };
+    $('.content').load('registro.html', doRegistro);
 }
 
 function logout() {
@@ -127,10 +125,10 @@ function logout() {
 }
 
 function loadLogin() {
-    $('.content').load('login.html', function (responseTxt, statusTxt, xhr) {
+    let doLogin = function (responseTxt, statusTxt, xhr) {
         if (statusTxt == "success") {
             hideLoginAlert();
-            $('#loginForm').submit(function (event) {
+            let ajaxLogin = function (event) {
                 event.preventDefault();
                 var operacion = "/users/login";
                 var username = $('#inputUsername').val();
@@ -152,12 +150,14 @@ function loadLogin() {
                     .fail(function (error) {
                         errorLoginUser();
                     });
-            });
+            };
+            $('#loginForm').submit(ajaxLogin);
         }
         if (statusTxt == "error") {
             console.log("Error: " + xhr.status + ": " + xhr.statusText);
         }
-    });
+    };
+    $('.content').load('login.html', doLogin);
 }
 
 function treatToken(response, xhr) {
@@ -184,9 +184,3 @@ function deleteToken(key) {
 function getToken(key) {
     return sessionStorage.getItem(key);
 }
-
-
-
-
-
-
