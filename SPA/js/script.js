@@ -110,7 +110,7 @@ function loadRegistro() {
             let registro = function (event) {
                 // Comprobacion para evitar Spam en el envio del formulario de registro
                 var controlSpam = $('#nospam').val();
-                if (controlSpam) {
+                if (controlSpam === '') {
                     console.log("El campo de control de spam está vacío. Se realiza el envío del formulario de registro de usuario");
 
                     //TODO: POST /users
@@ -155,7 +155,8 @@ function loadLogin() {
                         console.log("Response : " + response);
 
                         var controlSpam = $('#nospam').val();
-                        if (controlSpam) {
+                        console.log("controlSpam" + controlSpam);
+                        if (controlSpam === '') {
                             console.log("El campo de control de spam está vacío. Se realiza la petición Login");
 
                             if (treatToken(response, xhr)) {
