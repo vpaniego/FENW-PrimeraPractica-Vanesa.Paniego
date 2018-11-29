@@ -5,6 +5,7 @@ const ajaxDataType = "json";
 const locationSPA = '/SPA/';
 
 const tokenKey = "authToken";
+const tokenUserNameKey = "username";
 
 $(function () {
     hideComponentsNavBar();
@@ -15,7 +16,6 @@ $(function () {
     $('#idInstalaciones').click(loadInstalaciones);
     $('#idServicios').click(loadServicios);
     $('#idLogout').click(logout);
-
 });
 
 function hideComponentsNavBar() {
@@ -36,17 +36,24 @@ function showLoginAlertAuthentication() {
     $('#alertaErrorVerificacionLogin').show();
 }
 
+function showUserNameNavBar(){
+    let usernameLogged = getToken(tokenUserNameKey);
+    $('a[class=dropdown-toggle]').text(usernameLogged).append($('<span></span>').addClass("caret"));
+}
+
 function toggleComponentsNavBar() {
     if (getToken(tokenKey)) {
         $('#idReservar').toggle();
+        showUserNameNavBar();
         $('#idMenuLogout').toggle();
         $('#idLogin').toggle();
     }
 }
 
-function successLogin(username) {
-    console.log("Usuario " + username + " logado correctamente");
-    $('a[class=dropdown-toggle]').text(username).append($('<span></span>').addClass("caret"));
+function successLogin() {
+    let usernameLogged = getToken(tokenUserNameKey);
+    console.log("Usuario " + usernameLogged + " logado correctamente");
+    showUserNameNavBar();
     hideLoginAlert();
     loadHome();
 }
@@ -131,6 +138,8 @@ function loadRegistro() {
 
 function logout() {
     deleteToken(tokenKey);
+    deleteToken(tokenUserNameKey);
+
     redirectToIndex();
 }
 
@@ -158,7 +167,7 @@ function loadLogin() {
                         console.log("controlSpam" + controlSpam);
                         if (controlSpam === '') {
                             console.log("El campo de control de spam está vacío. Se realiza la petición Login");
-
+                            saveToken(tokenUserNameKey, username);
                             if (treatToken(response, xhr)) {
                                 successLogin(username);
                             } else {
@@ -195,12 +204,12 @@ function treatToken(response, xhr) {
 }
 
 function saveToken(key, value) {
-    console.log("Almacenamiento del token en sessionStorage");
+    console.log("Almacenamiento en sessionStorage");
     sessionStorage.setItem(key, value);
 }
 
 function deleteToken(key) {
-    console.log("Eliminación del token de sessionStorage tras logout");
+    console.log("Eliminación de sessionStorage tras logout");
     sessionStorage.removeItem(key);
 }
 
