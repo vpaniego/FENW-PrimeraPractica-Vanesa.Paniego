@@ -19,6 +19,11 @@
                 <strong>Ups!</strong> Authenticación no verificada
             </div>
             <button type="submit" class="btn btn-primary" id="buttonLogin">Login</button>
+
+            <!-- Honeypot: Mecanismo para evitar bots -->
+            <label for="nospam" class="escondido">¡Si ves esto, no rellenes el siguiente campo!</label>
+            <input id="nospam" name="nospam" class="escondido" />
+
         </form>
     </div>
 </div>

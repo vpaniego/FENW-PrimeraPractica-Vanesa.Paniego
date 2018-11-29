@@ -33,21 +33,15 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-2" for="datepickerFechaNacimiento">Fecha de Nacimiento:</label>
+                <label class="control-label col-sm-2" for="idDatepickerFechaNacimiento">Fecha de Nacimiento:</label>
                 <div class="col-sm-10">
-                    <!-- <input type="date" class="form-control" id="datepickerFechaNacimiento" placeholder="dd/mm/aaaa"> -->
-                    <div class="input-group date" id="datepickerFechaNacimiento">
-                        <input type="text" class="form-control" placeholder="dd/mm/aaaa" />
-                        <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                    </div>
+                    <input type="text" class="form-control" id="idDatepickerFechaNacimiento" placeholder="dd/mm/aaaa">
                 </div>
             </div>
             <button type="submit" class="btn btn-primary">Enviar</button>
 
-            <!-- Honeypot: Evitar bots-->
-            <label for="nospam" class="escondido">¡Si ves esto, no llenes el siguiente campo!</label>
+            <!-- Honeypot: Mecanismo para evitar bots -->
+            <label for="nospam" class="escondido">¡Si ves esto, no rellenes el siguiente campo!</label>
             <input id="nospam" name="nospam" class="escondido" />
 
         </form>

@@ -15,6 +15,7 @@ $(function () {
     $('#idInstalaciones').click(loadInstalaciones);
     $('#idServicios').click(loadServicios);
     $('#idLogout').click(logout);
+
 });
 
 function hideComponentsNavBar() {
@@ -82,7 +83,16 @@ function loadInstalaciones() {
 function loadReservar() {
     let myToken = getToken(tokenKey);
     if (myToken) {
-        loadComponent('reservar.html');
+        let doReservar = function (responseTxt, statusTxt, xhr) {
+            if (statusTxt == "success") {
+                $("#idDatepickerReserva").datepicker($.datepicker.regional["es"]);
+            }
+            if (statusTxt == "error") {
+                console.log("Error: " + xhr.status + ": " + xhr.statusText);
+            }
+        };
+
+        $('.content').load('reservar.html', doReservar);
     }
 }
 
@@ -95,7 +105,7 @@ function loadRegistro() {
     let doRegistro = function (responseTxt, statusTxt, xhr) {
         if (statusTxt == "success") {
 
-            //$('#datepickerFechaNacimiento').datetimepicker();
+            $("#idDatepickerFechaNacimiento").datepicker($.datepicker.regional["es"]);
 
             let registro = function (event) {
                 // Comprobacion para evitar Spam en el envio del formulario de registro
@@ -113,7 +123,7 @@ function loadRegistro() {
             $('#registryForm').submit(registro);
         }
         if (statusTxt == "error") {
-            alert("Error: " + xhr.status + ": " + xhr.statusText);
+            console.log("Error: " + xhr.status + ": " + xhr.statusText);
         }
     };
     $('.content').load('registro.html', doRegistro);
@@ -141,10 +151,20 @@ function loadLogin() {
                     dataType: ajaxDataType
                 })
                     .done(function (response, textStatus, xhr) {
-                        if (treatToken(response, xhr)) {
-                            successLogin(username);
+                        console.log("Status success login " + textStatus);
+                        console.log("Response : " + response);
+
+                        var controlSpam = $('#nospam').val();
+                        if (controlSpam) {
+                            console.log("El campo de control de spam está vacío. Se realiza la petición Login");
+
+                            if (treatToken(response, xhr)) {
+                                successLogin(username);
+                            } else {
+                                errorLoginAuthentication();
+                            }
                         } else {
-                            errorLoginAuthentication();
+                            console.log("El campo de control de spam no está vacío. Es un spam bot!!!");
                         }
                     })
                     .fail(function (error) {
@@ -174,10 +194,12 @@ function treatToken(response, xhr) {
 }
 
 function saveToken(key, value) {
+    console.log("Almacenamiento del token en sessionStorage");
     sessionStorage.setItem(key, value);
 }
 
 function deleteToken(key) {
+    console.log("Eliminación del token de sessionStorage tras logout");
     sessionStorage.removeItem(key);
 }
 
